@@ -24,23 +24,21 @@ public class RedPill {
         }
     }
 
-    public int readNumbersFromFileAndFindAverage(String fileName) throws IOException {
+    public double readNumbersFromFileAndFindAverage(String fileName) throws IOException {
         List<Integer> integers = new ArrayList<>();
-        List<Double> doubles = new ArrayList<>();
-        var integer = 0;
-        var doub = 0.0;
         var count = 0;
+        var integer = 0;
         try (Scanner scanner = new Scanner(new FileInputStream(fileName))) {
-            while (scanner.hasNextInt() || scanner.hasNextDouble()) {
-                ++count;
+            while (scanner.hasNext()) {
                 if (count > 99) {
                     break;
                 }
-                if ((doub = scanner.nextDouble()) > 0) {
-                    doubles.add(doub);
-                }
-                else if ((integer = scanner.nextInt()) > 0) {
+                if (scanner.hasNextInt() && ((integer = scanner.nextInt()) > 0)) {
                     integers.add(integer);
+                    ++count;
+                }
+                else  {
+                    scanner.next();
                 }
             }
         }
@@ -49,10 +47,7 @@ public class RedPill {
         for (Integer number : integers) {
             sum += number;
         }
-        for (Double number : doubles) {
-            sum += number;
-        }
-        result = sum / (integers.size() + doubles.size());
+        result = sum / integers.size();
         return result;
     }
 
