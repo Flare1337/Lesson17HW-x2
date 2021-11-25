@@ -33,9 +33,11 @@ public class RedPill {
                 if (count > 99) {
                     break;
                 }
-                if (scanner.hasNextInt() && ((integer = scanner.nextInt()) > 0)) {
-                    integers.add(integer);
+                if (scanner.hasNextInt()) {
                     ++count;
+                    if ((integer = scanner.nextInt()) > 0) {
+                        integers.add(integer);
+                    }
                 }
                 else  {
                     scanner.next();
