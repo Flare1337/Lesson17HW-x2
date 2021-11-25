@@ -1,6 +1,8 @@
 package com.company;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class BluePill {
@@ -162,16 +164,21 @@ public class BluePill {
     public void copyFileUsingInputOutput(String from, String to) throws IOException {
         try (InputStreamReader dataInStream = new InputStreamReader(new FileInputStream(from));
              OutputStreamWriter dataOutStream = new OutputStreamWriter(new FileOutputStream(to))) {
+            Instant start = Instant.now();
             while (dataInStream.ready()) {
                 dataOutStream.write(dataInStream.read());
             }
+            Instant end = Instant.now();
+            long timeElapsed = Duration.between(start, end).toMillis();
+            System.out.println("Времени прошло без буфера " +
+                    "с использованием FileInputStream/FileOutputStream: " + timeElapsed);
         }
     }
 
     public void copyFileUsingInputOutputButLocalBuffer(String from, String to) throws IOException {
         try (FileInputStream dataInStream = new FileInputStream(from);
              FileOutputStream dataOutStream = new FileOutputStream(to)) {
-
+            Instant start = Instant.now();
             while (dataInStream.available() > 0) {
                 byte[] bytesBuffer = new byte[4096];
                 for (int index = 1; index <= bytesBuffer.length && dataInStream.available() > 0; index++) {
@@ -180,21 +187,32 @@ public class BluePill {
                 dataOutStream.write(bytesBuffer);
                 bytesBuffer = new byte[0];
             }
+            Instant end = Instant.now();
+            long timeElapsed = Duration.between(start, end).toMillis();
+            System.out.println("Времени прошло с локальным буфером, " +
+                               "с использованием FileInputStream/FileOutputStream: " + timeElapsed);
         }
     }
 
     public void copyFileUsingBufferedStream(String from, String to) throws IOException {
         try (BufferedInputStream dataInStream = new BufferedInputStream(new FileInputStream(from));
              BufferedOutputStream dataOutStream = new BufferedOutputStream(new FileOutputStream(to))) {
+            Instant start = Instant.now();
             while (dataInStream.available() > 0) {
                 dataOutStream.write(dataInStream.read());
+
             }
+            Instant end = Instant.now();
+            long timeElapsed = Duration.between(start, end).toMillis();
+            System.out.println("Времени прошло без буфера, " +
+                    "с использованием BufferedInputStream/BufferedOutputStream: " + timeElapsed);
         }
     }
 
     public void copyFileUsingBufferedStreamWithBigBuffer(String from, String to) throws IOException {
         try (BufferedInputStream dataInStream = new BufferedInputStream(new FileInputStream(from));
              BufferedOutputStream dataOutStream = new BufferedOutputStream(new FileOutputStream(to))) {
+            Instant start = Instant.now();
             while (dataInStream.available() > 0) {
                     byte[] bytesBuffer = new byte[4096];
                     for (int index = 1; dataInStream.available() > 0 && index <= bytesBuffer.length; index++) {
@@ -203,6 +221,10 @@ public class BluePill {
                     dataOutStream.write(bytesBuffer);
                     bytesBuffer = new byte[0];
             }
+            Instant end = Instant.now();
+            long timeElapsed = Duration.between(start, end).toMillis();
+            System.out.println("Времени прошло с локальным буфером, " +
+                    "с использованием BufferedInputStream/BufferedOutputStream: " + timeElapsed);
         }
     }
 }
